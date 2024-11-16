@@ -1,3 +1,5 @@
+# from: https://www.geeksforgeeks.org/object-detection-with-yolo-and-opencv/
+
 import cv2
 from ultralytics import YOLO
 
