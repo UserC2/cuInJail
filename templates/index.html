@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Apply background image to body */
+        body {
+            background-image: url('static/cookies.jpg');
+            /* Path to your background image */
+            background-size: auto;
+            /* Ensure the image covers the entire background */
+            background-position: center;
+            /* Center the background image */
+            background-attachment: scroll;
+            /* Keep the background fixed while scrolling
+            color: white; */
+            /* Set the text color to white for contrast */
+            text-align: center;
+            /* Center-align text */
+            font-family: Arial, sans-serif;
+            /* Optional: Set a clean font */
+            margin: 0;
+            /* Remove default margin */
+            height: 100vh;
+            /* Make the body take up the full viewport height */
+        }
+
+        /* Style for the h1 element */
+        h1 {
+            font-size: 3rem;
+            margin-top: 50px;
+            /* Adjust space from top */
+        }
+
+        /* Style for the video feed */
+        img {
+            border: 2px solid white;
+            /* Optional: Adds a white border around the video */
+            border-radius: 10px;
+            /* Optional: Rounds the corners of the video */
+        }
+
+        /* Draggable and resizable rectangle style */
+        .rectangle {
+            position: absolute;
+            width: 150px;
+            height: 100px;
+            background-color: rgba(0, 255, 0, 0.5);
+            border: 2px solid red;
+            cursor: move;
+        }
+
+        /* Resizing handles */
+        .resize-handle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: red;
+        }
+
+        .resize-handle.top-left {
+            top: -5px;
+            left: -5px;
+            cursor: nwse-resize;
+        }
+
+        .resize-handle.top-right {
+            top: -5px;
+            right: -5px;
+            cursor: nesw-resize;
+        }
+
+        .resize-handle.bottom-left {
+            bottom: -5px;
+            left: -5px;
+            cursor: nesw-resize;
+        }
+
+        .resize-handle.bottom-right {
+            bottom: -5px;
+            right: -5px;
+            cursor: nwse-resize;
+        }
+    </style>
+</head>
+
+<body>
+    <h1> </h1>
+    <!-- Display the video stream -->
+    <img src="{{ url_for('video') }}" width="1200" height="850" />
+
+    <!-- Draggable and resizable rectangle -->
+    <div class="rectangle" id="rectangle">
+        <!-- Resize handles -->
+        <div class="resize-handle top-left"></div>
+        <div class="resize-handle top-right"></div>
+        <div class="resize-handle bottom-left"></div>
+        <div class="resize-handle bottom-right"></div>
+    </div>
+
+    <!-- Include interact.js for drag and resize functionality -->
+    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+
+    <script>
+        // Make the rectangle draggable
+        interact('.rectangle')
+            .draggable({
+                // Enable dragging functionality
+                onmove: function (event) {
+                    const rect = event.target;
+                    const x = (parseFloat(rect.getAttribute('data-x')) || 0) + event.dx;
+                    const y = (parseFloat(rect.getAttribute('data-y')) || 0) + event.dy;
+
+                    rect.style.transform = `translate(${x}px, ${y}px)`;
+                    rect.setAttribute('data-x', x);
+                    rect.setAttribute('data-y', y);
+                }
+            })
+            .resizable({
+                edges: { top: true, left: true, bottom: true, right: true },
+                onmove: function (event) {
+                    const rect = event.target;
+                    const width = event.rect.width;
+                    const height = event.rect.height;
+
+                    rect.style.width = `${width}px`;
+                    rect.style.height = `${height}px`;
+                }
+            });
+    </script>
+</body>
+
+</html>
